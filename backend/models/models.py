@@ -1,9 +1,9 @@
 
 from sqlalchemy import Column, Integer, String, Text, Date, Enum, ForeignKey, Table
 from sqlalchemy.orm import relationship, validates
-from core.db import Base
-from models.enum import ExerAccessory, ExerMachine, UserRole
-from utils.pwd import hash_password, verify_password
+from backend.core.db import Base
+from backend.models.enum import Equipment, UserRole
+from backend.utils.pwd import hash_password, verify_password
 
 # ===== n:n Join Tables ==============================================================
 
@@ -11,7 +11,8 @@ from utils.pwd import hash_password, verify_password
 training_plans_exercises = Table(
     'training_plan_exercise', Base.metadata,
     Column('training_plan_id',Integer, ForeignKey('training_plans.id'),primary_key=True),
-    Column('exercise_id',Integer, ForeignKey('exercises.id'),primary_key=True)
+    Column('exercise_id',Integer, ForeignKey('exercises.id'),primary_key=True),
+    extend_existing=True
 )
 
 # ===== Models ==============================================================
@@ -26,24 +27,29 @@ class BaseRepr:
 
 class Exercise(Base, BaseRepr):
     __tablename__="exercises"
-    id=Column(Integer,primary_key=True)
+    __table_args__ = {'extend_existing': True}
+
+    id=Column(Integer,primary_key=True, autoincrement=True)
     name=Column(String(200),nullable=False)
     description=Column(Text)
     image_path_1=Column(String(255))
     image_path_2=Column(String(255))
-    accessory= Column(Enum(ExerAccessory),default=None)
-    machine= Column(Enum(ExerMachine),default=None)
+    equipment= Column(Enum(Equipment),default=None)
 
 class TrainingPlan(Base, BaseRepr): # user:trainingPlan 1:n
     __tablename__="training_plans"
-    id=Column(Integer,primary_key=True)
+    __table_args__ = {'extend_existing': True}
+
+    id=Column(Integer,primary_key=True, autoincrement=True)
     name=Column(String(100), nullable=False, default="Untitled Training Plan")
     user_id=Column(Integer, ForeignKey("users.id"),nullable=False)
     user = relationship("User",back_populates="training_plans") # training_plans-user n:1
 
 class User(Base,BaseRepr):
     __tablename__="users" 
-    id=Column(Integer,primary_key=True)
+    __table_args__ = {'extend_existing': True}
+    
+    id=Column(Integer,primary_key=True, autoincrement=True)
     username=Column(String(100),nullable=False)
     email=Column(String(100),nullable=False, unique=True)
     password=Column(String(100),nullable=False) # TODO

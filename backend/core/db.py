@@ -19,7 +19,7 @@ class Database:
         self.sessionLocal = sessionmaker(bind=self.engine)
         self.Base = declarative_base()
 
-    # yields a db session object (used per route), doesnt accept or returns anything else:
+    # yields a db session object (used per route), doesnt accept or return anything else:
     def get_db(self) -> Generator[Session, None, None]: 
         db = self.sessionLocal()
         try:

@@ -1,6 +1,6 @@
 from models.models import User, Exercise, TrainingPlan
 from sqlalchemy.orm import Session
-from utils.pwd import verify_password
+from backend.utils.pwd import verify_password
 
 class UserRepository:
     def __init__(self,session:Session):

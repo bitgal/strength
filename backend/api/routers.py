@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from core.db import get_db
-from crud.user_repository import UserRepository
-from crud.training_plan_repository import TrainingPlanRepository
-from utils.pwd import hash_password
+from backend.core.db import get_db
+from backend.crud.user_repository import UserRepository
+from backend.crud.training_plan_repository import TrainingPlanRepository
+from backend.utils.pwd import hash_password
 
 
 

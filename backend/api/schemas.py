@@ -1,26 +1,26 @@
 from pydantic import BaseModel,Field,ConfigDict
 from datetime import date
-from models.enum import UserRole, ExerAccessory, ExerMachine
+from backend.models.enum import UserRole, Equipment
 
 # ===== Exercises ==============================================================
 
 class ExerciseBase(BaseModel):
     name: str
-    accessory: ExerAccessory | None = None
-    machine: ExerMachine | None = None
 
 # what client will send the endpoint
 class ExerciseCreate(ExerciseBase):
     description: str | None = None
-    image_start_path: str | None = None
-    image_end_path: str | None = None
+    image_path_1: str | None = None
+    image_path_2: str | None = None
+    equipment: Equipment | None = None
 
 # what the response sent to the client looks like
 class ExerciseRead(ExerciseBase):
     id: int
     description: str | None = None
-    image_start_path: str | None = None
-    image_end_path: str | None = None
+    image_path_1: str | None = None
+    image_path_2: str | None = None
+    equipment: Equipment | None = None
     # adding Model-config so FastAPI automatically:
     # 1. Converts model to dict (using from_attributes=True)
     # 2. Converts dict to JSON

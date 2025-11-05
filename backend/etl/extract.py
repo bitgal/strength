@@ -1,6 +1,7 @@
 import requests
 import json
 import os
+from backend.config import RAW_DATA_DIR, PROCESSED_DATA_DIR, IMAGES_DIR
 
 
 BASE_URL = "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/dist/exercises.json"
@@ -8,11 +9,12 @@ IMAGE_PREFIX_URL = "https://raw.githubusercontent.com/yuhonas/free-exercise-db/m
 
 response = requests.get(BASE_URL).json()
 
-os.makedirs("../data/raw", exist_ok=True)
-os.makedirs("../data/processed", exist_ok=True)
-os.makedirs("../data/raw/images", exist_ok=True)
+os.makedirs(RAW_DATA_DIR, exist_ok=True)
+os.makedirs(PROCESSED_DATA_DIR, exist_ok=True)
+os.makedirs(IMAGES_DIR, exist_ok=True)
 
-with open('../data/raw/exercises.json', 'w') as f:
+raw_exercises_file = f"{RAW_DATA_DIR}/exercises.json"
+with open(raw_exercises_file, 'w') as f:
     json.dump(response, f, indent=2)
 
 #images in json are a relative path
@@ -23,7 +25,7 @@ for exercise in response:
 
     for image_path in exercise_images:
         image_full_url = IMAGE_PREFIX_URL + image_path
-        local_path = f"../data/raw/images/{image_path}"
+        local_path = f"{IMAGES_DIR}/{image_path}"
 
         # skip if already exists
         if os.path.exists(local_path):
@@ -40,7 +42,7 @@ for exercise in response:
 
     exercise['images'] = new_images
 
-#save json with local image paths to processed/     
-with open("../data/processed/exercises.json", "w") as f:
+#save json with local image paths to processed/
+with open(f"{PROCESSED_DATA_DIR}/exercises.json", "w") as f:
     json.dump(response, f, indent=2)
 
