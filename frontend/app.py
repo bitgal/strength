@@ -8,9 +8,26 @@ import requests
 BASE_URL = "http://localhost:8000"
 #streamlit frontend at http://localhost:8502
 
-def welcome():
+
+def welcome(msg:str=""):
     user = st.session_state.get('user')
     st.title(f"Welcome {user['username']}")
+
+    st.info(msg)
+
+    st.write("Your Training Plans")
+    response = requests.get(f"{BASE_URL}/users/{user["id"]}/training_plans")
+    if response.status_code==200:
+        tps = response.json()
+        if tps:
+            st.table(tps)
+        else:
+            st.info("No Training Plans yet")
+            if st.button("Create your first plan"):
+                st.session_state.page = "create_training_plan"
+                st.rerun()
+    else:
+        st.info("smt went wrong fetching your plans")
 
 
 def logon():
@@ -64,10 +81,30 @@ def register():
             else:
                 st.error("Something is missing :(")
 
-def main():
+def new_tp():
+    st.title("A brand new Training Plan")
 
+    
+
+    with st.form(key="new_tp_form"):
+        st.text_input("title")
+
+        submit =  st.form_submit_button("Create Plan")
+
+        if submit:
+            pass
+    
+
+   
+
+def main():
     #init page
-    if "page" not in st.session_state:
+    #  if st.session_state.page == "logon":
+    #     # Reset session state except for page
+    #     keys_to_reset = [key for key in st.session_state.keys() if key != "page"]
+    #     for key in keys_to_reset:
+    #         del st.session_state[key]
+    if "page" not in st.session_state: 
         st.session_state.page = "logon"
 
     if st.session_state.page == "logon":
@@ -76,6 +113,8 @@ def main():
         register()
     elif st.session_state.page == "welcome":
         welcome()
+    elif st.session_state.page == "create_training_plan":
+        new_tp()
 
 if __name__ == "__main__":
     main()

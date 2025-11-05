@@ -59,5 +59,5 @@ class User(Base,BaseRepr):
     def validate_password(self, key, value):
         if not value:
             raise ValueError("Password cannot be empty")
-        return hash_password(value)
+        return value
     

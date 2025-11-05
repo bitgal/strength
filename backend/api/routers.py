@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from core.db import get_db
 from crud.user_repository import UserRepository
+from crud.training_plan_repository import TrainingPlanRepository
 from utils.pwd import hash_password
 
 
@@ -26,8 +27,6 @@ def authenticate_user(credentials: UserLogin, db: Session = Depends(get_db)):
     print(credentials)
     repo = UserRepository(db)
     u = repo.authenticate(credentials.email, credentials.password)
-    print("**************************")
-    print(u)
     if not u:
         raise HTTPException(status_code=401, detail="Invalid name or password")
     return u
@@ -38,11 +37,14 @@ def create_user(user:UserCreate, db:Session=Depends(get_db)):
     #new_user = User(**user.model_dump())
     hashed_pw = hash_password(user.password)
     new_user = User(email=user.email, password=hashed_pw, username=user.username)
-    print("RRRREEEEEGGGGIIIISSSTTTEEERRRRRR")
-    print(repr(hashed_pw))  # see exactly what string is stored
-    print(repr(user.password))  # see exactly what comes from DB
 
     return repo.create_user(new_user)
+
+@users_router.get("/{user_id}/training_plans", response_model=list[TrainingPlanRead]) #/users/2/training_plans
+def get_tps_by_user(user_id: int, db: Session = Depends(get_db)):
+    repo = TrainingPlanRepository(db)
+    return repo.get_training_plans_by_user(user_id)
+
 
 # @user_router.get("/{user_id}", response_model=UserRead)
 # def get_user(user_id: int, db: Session = Depends(get_db)):
@@ -52,10 +54,6 @@ def create_user(user:UserCreate, db:Session=Depends(get_db)):
 #         raise HTTPException(status_code=404, detail="User not found")
 #     return user
 
-# @user_router.get("/{user_id}/training_plans", response_model=list[TrainingPlanRead]) #/users/2/training_plans
-# def get_todos_by_user(user_id: int, db: Session = Depends(get_db)):
-#     repo = TodoRepository(db)
-#     return repo.get_todos_by_user(user_id)
 
 
 # # ===== Exercises ==============================================================

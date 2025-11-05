@@ -14,8 +14,6 @@ class UserRepository:
 
     def authenticate(self, email: str, password: str) -> User | None:
             user = self.session.query(User).filter(User.email == email).first()
-            print("AAAAUUUUTHENTICATEEEEEE")
-            print(user)
             if user and verify_password(password, user.password):
                 return user
             return None
