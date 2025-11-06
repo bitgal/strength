@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from backend.core.db import get_db
 from backend.crud.user_repository import UserRepository
 from backend.crud.training_plan_repository import TrainingPlanRepository
+from backend.crud.exercise_repository import ExerciseRepository
 from backend.utils.pwd import hash_password
 
 
@@ -44,6 +45,12 @@ def create_user(user:UserCreate, db:Session=Depends(get_db)):
 def get_tps_by_user(user_id: int, db: Session = Depends(get_db)):
     repo = TrainingPlanRepository(db)
     return repo.get_training_plans_by_user(user_id)
+
+@exercises_router.get("/", response_model=list[ExerciseRead])
+def list_exercises(db: Session = Depends(get_db)):
+    repo = ExerciseRepository(db)
+    return repo.get_exercises()
+
 
 
 # @user_router.get("/{user_id}", response_model=UserRead)

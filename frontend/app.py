@@ -84,7 +84,23 @@ def register():
 def new_tp():
     st.title("A brand new Training Plan")
 
-    
+    st.divider()
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.subheader("All Exercises")
+
+        response = requests.get(f"{BASE_URL}/exercises")
+        if response.status_code==200:
+            exercises=response.json()
+            if exercises:
+                st.table(exercises)
+            else:
+                st.info("No Exercises in db")
+        else:
+            st.error(f"error: {response.status_code}")
+
 
     with st.form(key="new_tp_form"):
         st.text_input("title")

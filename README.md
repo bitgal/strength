@@ -36,6 +36,17 @@ end_training_plan (?)
 get_all_exercises
 filter_exercises (by accessory, machine, primaryMuscle)
 
+## start the app
+
+### using Docker
+
+docker-compose up -d --build
+
+## View the app
+ - Streamlit frontend: http://localhost:8502
+ - FastAPI backend: http://localhost:8000/docs (interactive API docs)
+ - Database: Connect in DBeaver with localhost:3306 (root/root)
+
 
 
 
