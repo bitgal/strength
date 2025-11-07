@@ -6,6 +6,7 @@ import streamlit as st
 import requests
 import os
 
+
 BASE_URL = os.getenv("API_URL", "http://localhost:8000")
 
 
@@ -86,30 +87,100 @@ def new_tp():
 
     st.divider()
 
-    col1, col2 = st.columns(2)
+    st.subheader("All Exercises")
 
-    with col1:
-        st.subheader("All Exercises")
+    response = requests.get(f"{BASE_URL}/exercises")
+    if response.status_code==200:
+        exercises=response.json()
+        if exercises:
+            import pandas as pd
+            from PIL import Image
+            import io
 
-        response = requests.get(f"{BASE_URL}/exercises")
-        if response.status_code==200:
-            exercises=response.json()
-            if exercises:
-                st.table(exercises)
-            else:
-                st.info("No Exercises in db")
+            df = pd.DataFrame(exercises)
+            # df['gif_url'] = df.apply(lambda row: create_gif(row['image_path_1'], row['image_path_2']), axis=1)
+
+            # initialize session state for exercise selection
+            if 'exercise_selection' not in st.session_state:
+                st.session_state.exercise_selection = {ex['id']: False for ex in exercises}
+
+            # search box
+            search = st.text_input("Search exercises:")
+            if search:
+                df = df[df['name'].str.contains(search, case=False, na=False)]
+
+            # checkbox
+            df.insert(0, "Select", df['id'].map(st.session_state.exercise_selection))
+            
+            # editable table with checkboxes
+            editable_df = st.data_editor(
+                df,
+                use_container_width=True,
+                hide_index=True,
+                height=400,
+                column_config={
+                    "Select": st.column_config.CheckboxColumn(required=True),
+                    "id": st.column_config.Column(disabled=True),
+                    "name": st.column_config.Column(disabled=True),
+                    "description": st.column_config.Column(disabled=True),
+                    # "gif_url": st.column_config.ImageColumn(disabled=True, label="Exercise"),
+                    "equipment": st.column_config.Column(disabled=True),
+                }
+            )
+
+           # update session state with selection
+            for idx, row in editable_df.iterrows():
+                st.session_state.exercise_selection[row['id']] = row['Select']
+            
+            # get all selected exercises
+            selected = [ex_id for ex_id, checked in st.session_state.exercise_selection.items() if checked]
         else:
-            st.error(f"error: {response.status_code}")
-
+            st.info("No Exercises in db")
+    else:
+        st.error(f"error: {response.status_code}")
 
     with st.form(key="new_tp_form"):
-        st.text_input("title")
+        tp_title = st.text_input("title")
 
         submit =  st.form_submit_button("Create Plan")
 
         if submit:
-            pass
-    
+            st.write(f"Selected: {selected}")
+            st.write(f"Title: {tp_title}")
+            # TODO backend
+
+def create_gif(image_path_1, image_path_2):
+    """Create a GIF from two images and return as bytes"""
+    try:
+        from PIL import Image
+        import io
+        
+        image_1_recon_path = IMAGES_DIR / image_path_1.split('/')[-2] / image_path_1.split('/')[-1]
+        image_2_recon_path = IMAGES_DIR / image_path_2.split('/')[-2] / image_path_2.split('/')[-1]
+        
+        img1 = Image.open(image_1_recon_path)
+        img2 = Image.open(image_2_recon_path)
+        
+        # Resize to same size if needed
+        img1 = img1.resize((200, 200))
+        img2 = img2.resize((200, 200))
+        
+        # Create GIF in memory
+        gif_bytes = io.BytesIO()
+        img1.save(
+            gif_bytes,
+            format='GIF',
+            save_all=True,
+            append_images=[img2],
+            duration=500,  # 500ms per frame
+            loop=0  # infinite loop
+        )
+        gif_bytes.seek(0)
+        return gif_bytes
+        
+    except Exception as e:
+        st.warning(f"Could not create GIF: {e}")
+        return None
 
    
 
