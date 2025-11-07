@@ -28,7 +28,10 @@ class Database:
             db.close()
 
 # instantiate a single database manager
-db_url_prod = "mysql+pymysql://root:root@localhost:8889/db_strength"
+db_url_prod = os.getenv(
+    "DATABASE_URL",
+    "mysql+pymysql://root:root@localhost:8889/db_strength"
+)
 db_url_test = "sqlite:///strength.db"
 
 db_manager = Database(DATABASE_URL = db_url_prod)

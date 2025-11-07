@@ -4,9 +4,9 @@
 
 import streamlit as st
 import requests
+import os
 
-BASE_URL = "http://localhost:8000"
-#streamlit frontend at http://localhost:8502
+BASE_URL = os.getenv("API_URL", "http://localhost:8000")
 
 
 def welcome(msg:str=""):
@@ -16,7 +16,7 @@ def welcome(msg:str=""):
     st.info(msg)
 
     st.write("Your Training Plans")
-    response = requests.get(f"{BASE_URL}/users/{user["id"]}/training_plans")
+    response = requests.get(f"{BASE_URL}/users/{user['id']}/training_plans")
     if response.status_code==200:
         tps = response.json()
         if tps:

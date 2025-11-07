@@ -5,12 +5,10 @@ from backend.crud.user_repository import UserRepository
 from backend.crud.training_plan_repository import TrainingPlanRepository
 from backend.crud.exercise_repository import ExerciseRepository
 from backend.utils.pwd import hash_password
-
-
-
+from backend.models.models import User, TrainingPlan, Exercise
 # from utils.pwd import hash_password, verify_password # TODO
-from api.schemas import UserBase, UserCreate, UserLogin, UserRead, ExerciseBase, ExerciseRead, ExerciseCreate, TrainingPlanBase, TrainingPlanCreate, TrainingPlanRead
-from models.models import User, Exercise, TrainingPlan
+from backend.api.schemas import UserBase, UserCreate, UserLogin, UserRead, ExerciseBase, ExerciseRead, ExerciseCreate, TrainingPlanBase, TrainingPlanCreate, TrainingPlanRead
+
 
 users_router = APIRouter(prefix="/users", tags=["users"])
 exercises_router = APIRouter(prefix="/exercises", tags=["exercises"])

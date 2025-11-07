@@ -25,3 +25,4 @@ class Equipment(Enum):
     MACHINE = "machine"
     MEDICINE_BALL = "medicine ball"
     OTHER_ACCESSORY = "other accessory"
+    NO_EQUIPMENT = "no equipment"

@@ -1,12 +1,13 @@
 import json
 from backend.config import FOR_MYSQL_DIR
 from backend.models.models import Exercise
+from backend.models.enum import Equipment
 from sqlalchemy.orm import Session
 
 def load_exercises(db_manager):
     """Load exercises from JSON into database"""
     
-    exercises_file = f"{FOR_MYSQL_DIR}/exercises.json"
+    exercises_file = FOR_MYSQL_DIR / "exercises.json"
     with open(exercises_file, "r") as f:
         exercises_data = json.load(f)
     

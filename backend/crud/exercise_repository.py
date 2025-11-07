@@ -1,4 +1,4 @@
-from models.models import User, Exercise, TrainingPlan
+from backend.models.models import Exercise
 from sqlalchemy.orm import Session
 
 class ExerciseRepository:

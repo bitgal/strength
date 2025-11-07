@@ -1,6 +1,6 @@
 from pydantic import BaseModel,Field,ConfigDict
 from datetime import date
-from backend.models.enum import UserRole, Equipment
+from backend.models.enum import UserRole
 
 # ===== Exercises ==============================================================
 
@@ -12,7 +12,7 @@ class ExerciseCreate(ExerciseBase):
     description: str | None = None
     image_path_1: str | None = None
     image_path_2: str | None = None
-    equipment: Equipment | None = None
+    equipment: str | None = None
 
 # what the response sent to the client looks like
 class ExerciseRead(ExerciseBase):
@@ -20,7 +20,7 @@ class ExerciseRead(ExerciseBase):
     description: str | None = None
     image_path_1: str | None = None
     image_path_2: str | None = None
-    equipment: Equipment | None = None
+    equipment: str | None = None
     # adding Model-config so FastAPI automatically:
     # 1. Converts model to dict (using from_attributes=True)
     # 2. Converts dict to JSON

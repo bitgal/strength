@@ -1,8 +1,9 @@
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).parent.parent
+print(PROJECT_ROOT)
 
-DATA_DIR = PROJECT_ROOT / "data"
+DATA_DIR = PROJECT_ROOT /"backend" / "data"
 RAW_DATA_DIR = DATA_DIR / "raw"
 PROCESSED_DATA_DIR = DATA_DIR / "processed"
 FOR_MYSQL_DIR = DATA_DIR / "for_mysql"

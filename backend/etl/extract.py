@@ -13,7 +13,7 @@ os.makedirs(RAW_DATA_DIR, exist_ok=True)
 os.makedirs(PROCESSED_DATA_DIR, exist_ok=True)
 os.makedirs(IMAGES_DIR, exist_ok=True)
 
-raw_exercises_file = f"{RAW_DATA_DIR}/exercises.json"
+raw_exercises_file = RAW_DATA_DIR / "exercises.json"
 with open(raw_exercises_file, 'w') as f:
     json.dump(response, f, indent=2)
 
@@ -43,6 +43,7 @@ for exercise in response:
     exercise['images'] = new_images
 
 #save json with local image paths to processed/
-with open(f"{PROCESSED_DATA_DIR}/exercises.json", "w") as f:
+processed_exercises_file = PROCESSED_DATA_DIR / "exercises.json"
+with open(processed_exercises_file, "w") as f:
     json.dump(response, f, indent=2)
 

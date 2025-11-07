@@ -30,15 +30,16 @@ class Exercise(Base, BaseRepr):
     __table_args__ = {'extend_existing': True}
 
     id=Column(Integer,primary_key=True, autoincrement=True)
-    name=Column(String(200),nullable=False)
+    name=Column(String(200),nullable=False,unique=True)
     description=Column(Text)
     image_path_1=Column(String(255))
     image_path_2=Column(String(255))
-    equipment= Column(Enum(Equipment),default=None)
+    equipment= Column(String(200))
+    # equipment= Column(Enum(Equipment),nullable=True)
 
 class TrainingPlan(Base, BaseRepr): # user:trainingPlan 1:n
     __tablename__="training_plans"
-    __table_args__ = {'extend_existing': True}
+    # __table_args__ = {'extend_existing': True}
 
     id=Column(Integer,primary_key=True, autoincrement=True)
     name=Column(String(100), nullable=False, default="Untitled Training Plan")
@@ -47,7 +48,7 @@ class TrainingPlan(Base, BaseRepr): # user:trainingPlan 1:n
 
 class User(Base,BaseRepr):
     __tablename__="users" 
-    __table_args__ = {'extend_existing': True}
+    # __table_args__ = {'extend_existing': True}
     
     id=Column(Integer,primary_key=True, autoincrement=True)
     username=Column(String(100),nullable=False)
@@ -66,4 +67,7 @@ class User(Base,BaseRepr):
         if not value:
             raise ValueError("Password cannot be empty")
         return value
+    
+from sqlalchemy.orm import configure_mappers
+configure_mappers()
     

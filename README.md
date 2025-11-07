@@ -42,6 +42,15 @@ filter_exercises (by accessory, machine, primaryMuscle)
 
 docker-compose up -d --build
 
+### manually
+
+ - start the backend: `python -m backend.main`
+ - start the frontend: `streamlit run frontend/app.py`
+
+### ETL
+ - load data to the exercise table:
+ `python -c "from backend.etl.load import load_exercises; from backend.core.db import db_manager; load_exercises(db_manager)"`
+
 ## View the app
  - Streamlit frontend: http://localhost:8502
  - FastAPI backend: http://localhost:8000/docs (interactive API docs)

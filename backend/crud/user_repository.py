@@ -1,5 +1,6 @@
-from models.models import User, Exercise, TrainingPlan
 from sqlalchemy.orm import Session
+
+from backend.models.models import User
 from backend.utils.pwd import verify_password
 
 class UserRepository:
